@@ -55,12 +55,10 @@ public class KProducer {
 
         } catch (Exception e) {
             logger.error("kafka 전송 실패", e);
-            producer.close();
-            producer = null;
+            closeProducer();
 
             // 에러 로그 기록
             errorLogManager.writeErrorLog(e, filteredLog);
-
         }
 
     }
@@ -86,6 +84,22 @@ public class KProducer {
         }
 
         return producer;
+
+    }
+
+    /**
+     * Producer 객체 종료 메소드
+     */
+    private void closeProducer(){
+        try{
+            if(producer != null) {
+                producer.close();
+            }
+        } catch (Exception e) {
+            logger.error("Producer 닫기 실패", e);
+        } finally {
+            producer = null;
+        }
 
     }
 }
