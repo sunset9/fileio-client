@@ -1,0 +1,52 @@
+package com.mobigen.fileio.service;
+
+import com.mobigen.fileio.dto.PosInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+
+import java.io.*;
+
+@Controller
+public class PosFileManager {
+    Logger logger = LoggerFactory.getLogger(PosFileManager.class);
+    private File file;
+
+    private PosFileManager(@Value("${pos.dirPath}") String dirPath, @Value("${pos.fileName}") String fileName){
+        file = new File(dirPath + "/" + fileName);
+    }
+
+    // 로컬 파일에 시작, 종료 포인터 기록
+    public void writePos(PosInfo posInfo){
+        try (FileWriter fw = new FileWriter(file)){
+            long start = posInfo.getStartPos();
+            long end = posInfo.getEndPos();
+
+            fw.write(start + "/" + end);
+        } catch (Exception e) {
+            logger.error("파일 쓰기 실패", e);
+        }
+    }
+
+    // 파일에 저장된 포인터 정보 가져오기
+    public PosInfo getStoredPos() {
+        PosInfo posInfo = new PosInfo();
+
+        if(file.exists()){
+            try (BufferedReader br = new BufferedReader(new FileReader(file))){
+                String line = br.readLine();
+
+                if(line!= null){
+                    posInfo.setStartPos(Long.parseLong(line.split("/")[0]));
+                    posInfo.setEndPos(Long.parseLong(line.split("/")[1]));
+                }
+            } catch (Exception e) {
+                logger.error("포인터 가져오기 실패", e);
+            }
+        }
+
+        return posInfo;
+    }
+
+}
