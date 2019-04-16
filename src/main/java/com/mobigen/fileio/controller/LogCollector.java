@@ -43,6 +43,7 @@ public class LogCollector {
     @Value("${oldfile.fileName}")
     private String oldfileName;
 
+
     public void start() {
         try {
             File targetFile = new File(dirPath + "/" + fileName);
@@ -87,6 +88,11 @@ public class LogCollector {
     }
 
 
+    /**
+     * 새로운 파일 수정 감시 메소드
+     *
+     * @param targetFile
+     */
     private void startWatch(File targetFile){
         PosInfo curPosInfo = null;
         WatchService watchService = null;
@@ -209,6 +215,12 @@ public class LogCollector {
         }
     }
 
+    /**
+     * 파일 수정 감지 시 수정 완료 확인 메소드
+     *
+     * @param dirPath
+     * @return
+     */
     private boolean isFileCreateDone(String dirPath) {
         boolean isDone = false;
 
@@ -235,6 +247,11 @@ public class LogCollector {
 
     }
 
+    /**
+     * 주기적으로 포인터 정보 저장 메소드
+     *
+     * @param posInfo
+     */
     private void scheduledWritePos(final PosInfo posInfo) {
         Runnable writePosInfo = new Runnable() {
             @Override
@@ -250,6 +267,12 @@ public class LogCollector {
     }
 
 
+    /**
+     * 서버로 보낼 로그 필터링 메소드
+     *
+     * @param logs
+     * @return
+     */
     private List<String> filterLog(List<String> logs){
 
         List<String> filteredLog = new ArrayList<>();

@@ -30,6 +30,11 @@ public class KProducer {
 
     private Producer<String, String> producer;
 
+    /**
+     * kafka로 메세지 전송 메소드
+     *
+     * @param filteredLog
+     */
     public void send(List<String> filteredLog) {
 
         try{
@@ -60,6 +65,11 @@ public class KProducer {
 
     }
 
+    /**
+     * Producer 객체 가져오는 메소드
+     *
+     * @return
+     */
     private Producer<String, String> getProducer(){
         Producer<String, String> producer;
         if(this.producer == null ){

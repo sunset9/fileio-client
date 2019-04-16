@@ -13,11 +13,21 @@ public class PosFileManager {
     Logger logger = LoggerFactory.getLogger(PosFileManager.class);
     private File file;
 
+    /**
+     * 생성자
+     *
+     * @param dirPath
+     * @param fileName
+     */
     private PosFileManager(@Value("${pos.dirPath}") String dirPath, @Value("${pos.fileName}") String fileName){
         file = new File(dirPath + "/" + fileName);
     }
 
-    // 로컬 파일에 시작, 종료 포인터 기록
+    /**
+     * 로컬 파일에 시작, 종료 포인터 기록하는 메소드
+     *
+     * @param posInfo
+     */
     public void writePos(PosInfo posInfo){
         try (FileWriter fw = new FileWriter(file)){
             long start = posInfo.getStartPos();
@@ -29,7 +39,11 @@ public class PosFileManager {
         }
     }
 
-    // 파일에 저장된 포인터 정보 가져오기
+    /**
+     * 파일에 저장된 포인터 정보 가져오기
+     *
+     * @return
+     */
     public PosInfo getStoredPos() {
         PosInfo posInfo = new PosInfo();
 

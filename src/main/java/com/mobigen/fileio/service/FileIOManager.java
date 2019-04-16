@@ -10,12 +10,18 @@ import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
+
 @Service
 public class FileIOManager {
     Logger logger = LoggerFactory.getLogger(FileIOManager.class);
 
-    // RandomAccessFile 객체 반환 메소드
-    private RandomAccessFile getRandomAccessFile(File file, String mode) {
+    /**
+     * RandomAccessFile 읽기용 객체 반환 메소드
+     *
+     * @param file
+     * @return
+     */
+    private RandomAccessFile getRandomAccessFile(File file) {
         RandomAccessFile raf = null;
 
         boolean isSucc = false;
@@ -23,7 +29,7 @@ public class FileIOManager {
 
         while(!isSucc){
             try {
-                raf = new RandomAccessFile(file, mode);
+                raf = new RandomAccessFile(file, "r");
                 isSucc = true;
             } catch (FileNotFoundException e) {
                 logger.info("RandomAccessFile 객체 생성 실패, 재시도");
@@ -42,7 +48,13 @@ public class FileIOManager {
         return raf;
     }
 
-    // 원하는 포인터부터 파일 읽는 메소드
+    /**
+     * 원하는 포인트로부터 파일 읽는 메소드
+     *
+     * @param file 읽으려는 파일
+     * @param curPosInfo 시작 포인터
+     * @return
+     */
     public ReadInfo readFile(File file, PosInfo curPosInfo) {
 
         ReadInfo readInfo = new ReadInfo();
@@ -56,7 +68,7 @@ public class FileIOManager {
                 logger.error("읽으려는 파일이 존재하지 않습니다. : " + file.getName());
             }
             // RandomAccessFile 객체 가져오기
-            RandomAccessFile raf = getRandomAccessFile(file, "r");
+            RandomAccessFile raf = getRandomAccessFile(file);
 
             // 읽으려는 시작포인터 설정
             raf.seek(curPosInfo.getEndPos());
